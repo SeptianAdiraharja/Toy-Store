@@ -16,8 +16,8 @@ Route::get('/', function () {
     if (!auth()->check()) {
         return redirect()->route('login');
     }
-    return auth()->user()->isKasir() 
-        ? redirect()->route('kasir.index') 
+    return auth()->user()->isKasir()
+        ? redirect()->route('kasir.index')
         : redirect()->route('dashboard');
 });
 
@@ -38,6 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/kasir', [KasirController::class, 'index'])->name('kasir.index');
     Route::post('/kasir/recommendations', [KasirController::class, 'getRecommendations'])->name('kasir.recommendations');
     Route::post('/kasir/store', [KasirController::class, 'store'])->name('kasir.store');
+    Route::get('rekomendasi-produk', [AprioriController::class, 'hasilRekomendasi'])->name('kasir.rekomendasi');
 
     // Kelola Data Produk (Admin CRUD, Owner & Kasir View)
     Route::resource('produks', ProdukController::class);
@@ -49,6 +50,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/transaksis/import', [TransaksiController::class, 'importForm'])->name('transaksis.import.form');
     Route::post('/transaksis/import', [TransaksiController::class, 'importProcess'])->name('transaksis.import.process');
     Route::resource('transaksis', TransaksiController::class)->only(['index', 'show', 'destroy']);
+    Route::get('transaksis/export/excel', [TransaksiController::class, 'exportExcel'])->name('transaksis.export.excel');
+    Route::get('transaksis/export/pdf', [TransaksiController::class, 'exportPdf'])->name('transaksis.export.pdf');
 
     // Proses Algoritma Apriori (Admin & Owner)
     Route::get('/apriori', [AprioriController::class, 'index'])->name('apriori.index');

@@ -9,6 +9,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use App\Exports\TransaksiExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TransaksiController extends Controller
 {
@@ -132,7 +135,7 @@ class TransaksiController extends Controller
                 }
 
                 $parsedDate = $this->parseIndonesianDate($dateVal);
-                
+
                 if ($customTrxId) {
                     $groupKey = $customTrxId;
                 } else {
@@ -387,5 +390,70 @@ class TransaksiController extends Controller
             $val *= 1000;
         }
         return $val;
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $fileName = 'laporan-transaksi-' . now()->format('Ymd_His') . '.xlsx';
+        return Excel::download(new TransaksiExport($request), $fileName);
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $query = Transaksi::with(['user', 'detailTransaksis.produk']);
+
+        if ($request->filled('search')) {
+            $query->where('id_transaksi', 'like', "%{$request->get('search')}%");
+        }
+        if ($request->filled('shift')) {
+            $query->where('shift', $request->get('shift'));
+        }
+        if ($request->filled('tanggal_mulai')) {
+            $query->whereDate('tanggal_transaksi', '>=', $request->get('tanggal_mulai'));
+        }
+        if ($request->filled('tanggal_selesai')) {
+            $query->whereDate('tanggal_transaksi', '<=', $request->get('tanggal_selesai'));
+        }
+
+        $transaksis = $query->latest('tanggal_transaksi')->get();
+
+        // Hitung persentase barang terjual
+        $detailQuery = DetailTransaksi::query()
+            ->join('transaksis', 'transaksis.id', '=', 'detail_transaksis.transaksi_id')
+            ->join('produks', 'produks.id', '=', 'detail_transaksis.produk_id');
+
+        if ($request->filled('search')) {
+            $detailQuery->where('transaksis.id_transaksi', 'like', "%{$request->get('search')}%");
+        }
+        if ($request->filled('shift')) {
+            $detailQuery->where('transaksis.shift', $request->get('shift'));
+        }
+        if ($request->filled('tanggal_mulai')) {
+            $detailQuery->whereDate('transaksis.tanggal_transaksi', '>=', $request->get('tanggal_mulai'));
+        }
+        if ($request->filled('tanggal_selesai')) {
+            $detailQuery->whereDate('transaksis.tanggal_transaksi', '<=', $request->get('tanggal_selesai'));
+        }
+
+        $produkRows = $detailQuery->select('produks.nama_produk', DB::raw('SUM(detail_transaksis.jumlah) as total_jumlah'))
+            ->groupBy('produks.nama_produk')
+            ->orderByDesc('total_jumlah')
+            ->get();
+
+        $grandTotalJumlah = $produkRows->sum('total_jumlah');
+
+        $produkPersentase = $produkRows->map(function ($row) use ($grandTotalJumlah) {
+            return [
+                'nama_produk' => $row->nama_produk,
+                'jumlah' => $row->total_jumlah,
+                'persentase' => $grandTotalJumlah > 0 ? round(($row->total_jumlah / $grandTotalJumlah) * 100, 2) : 0,
+            ];
+        });
+
+        $pdf = Pdf::loadView('transaksis.export-pdf', compact('transaksis', 'produkPersentase'))
+            ->setPaper('a4', 'landscape');
+
+        $fileName = 'laporan-transaksi-' . now()->format('Ymd_His') . '.pdf';
+        return $pdf->download($fileName);
     }
 }

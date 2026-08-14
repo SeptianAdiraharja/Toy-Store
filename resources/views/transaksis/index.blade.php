@@ -17,6 +17,12 @@
                 <i class="fa-solid fa-file-import"></i> Impor Data Transaksi
             </a>
             @endif
+            <a href="{{ route('transaksis.export.excel', request()->query()) }}" class="px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white font-bold text-sm rounded-xl shadow-sm transition-all flex items-center gap-2">
+                <i class="fa-solid fa-file-excel"></i> Excel
+            </a>
+            <a href="{{ route('transaksis.export.pdf', request()->query()) }}" class="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm rounded-xl shadow-sm transition-all flex items-center gap-2">
+                <i class="fa-solid fa-file-pdf"></i> PDF
+            </a>
             <a href="{{ route('kasir.index') }}" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow-sm transition-all flex items-center gap-2">
                 <i class="fa-solid fa-cart-plus"></i> Transaksi Baru
             </a>

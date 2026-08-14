@@ -150,4 +150,24 @@ class KasirController extends Controller
             ], 500);
         }
     }
+
+    public function hasilRekomendasi(Request $request)
+    {
+        $query = AssociationRule::query();
+
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('produk_antecedent', 'like', "%{$search}%")
+                ->orWhere('produk_consequent', 'like', "%{$search}%");
+            });
+        }
+
+        $rules = $query->orderBy('nilai_confidence', 'desc')
+            ->orderBy('nilai_support', 'desc')
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('apriori.hasil_rekomendasi', compact('rules'));
+    }
 }
