@@ -52,16 +52,21 @@
         <!-- Navigation Links (STRICT per role, sesuai struktur menu) -->
         <div class="flex-1 overflow-y-auto px-4 py-5 space-y-6 scrollbar-thin scrollbar-thumb-slate-800">
 
+            <div>
+                <nav class="space-y-1">
+
+                </nav>
+            </div>
+
             {{-- ================= MENU OWNER ================= --}}
             @if(auth()->user()->isOwner())
             <div>
-                <span class="px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Menu Owner</span>
                 <nav class="space-y-1">
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('dashboard') ? 'bg-gradient-to-r from-brand-600 to-indigo-600 text-white shadow-md shadow-brand-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
                         <i class="fa-solid fa-chart-pie text-base {{ request()->routeIs('dashboard') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
                         <span>Dashboard</span>
                     </a>
-
+                    <span class="px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Menu Owner</span>
                     <a href="{{ route('laporan.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('laporan.*') ? 'bg-amber-600 text-white shadow-md shadow-amber-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
                         <i class="fa-solid fa-file-invoice text-base {{ request()->routeIs('laporan.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
                         <span>Laporan Penjualan</span>
@@ -78,8 +83,12 @@
             {{-- ================= MENU ADMIN ================= --}}
             @if(auth()->user()->isAdmin())
             <div>
-                <span class="px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Menu Admin</span>
                 <nav class="space-y-1">
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('dashboard') ? 'bg-gradient-to-r from-brand-600 to-indigo-600 text-white shadow-md shadow-brand-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                        <i class="fa-solid fa-chart-pie text-base {{ request()->routeIs('dashboard') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <span class="px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider block my-6">Menu Admin</span>
                     <a href="{{ route('produks.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('produks.*') ? 'bg-brand-600 text-white shadow-md shadow-brand-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
                         <i class="fa-solid fa-boxes-stacked text-base {{ request()->routeIs('produks.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
                         <span>Data Produk</span>
