@@ -29,6 +29,29 @@
         </div>
     </div>
 
+    @if(session('imported_produks_count') && session('imported_produks_count') > 0)
+    <div class="bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200 p-4 rounded-2xl flex items-center justify-between shadow-xs">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-sm">
+                <i class="fa-solid fa-boxes-stacked"></i>
+            </div>
+            <div>
+                <p class="text-sm font-bold text-indigo-950">
+                    {{ session('imported_produks_count') }} Produk baru dari file import otomatis didaftarkan ke database!
+                </p>
+                @if(session('imported_produks_names'))
+                <p class="text-xs text-indigo-700 mt-0.5">
+                    Item: {{ implode(', ', session('imported_produks_names')) }}{{ session('imported_produks_count') > count(session('imported_produks_names')) ? ' ...dan lainnya' : '' }}
+                </p>
+                @endif
+            </div>
+        </div>
+        <a href="{{ route('produks.index') }}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 shrink-0 shadow-sm">
+            <i class="fa-solid fa-boxes-stacked"></i> Buka Katalog Produk
+        </a>
+    </div>
+    @endif
+
     <!-- Filter Form -->
     <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
         <form method="GET" action="{{ route('transaksis.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">

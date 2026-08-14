@@ -20,14 +20,22 @@
     <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-6">
         
         <!-- Format Info Banner -->
-        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/80 p-4 rounded-xl flex items-start gap-3">
+        <div class="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border border-blue-200/80 p-4 rounded-xl flex items-start gap-3">
             <div class="w-9 h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold shrink-0 mt-0.5 shadow-sm">
                 <i class="fa-solid fa-file-excel text-lg"></i>
             </div>
-            <div class="text-xs text-slate-700 leading-relaxed space-y-1">
-                <p class="font-bold text-sm text-slate-900">Format File Terdukung (.xlsx, .xls, .csv):</p>
-                <p>Sistem secara otomatis mendeteksi kolom: <span class="font-semibold text-blue-900">TANGGAL, NAMA BARANG, JUMLAH, TOTAL HARGA, SHIFT</span> (seperti contoh dataset Toko Mainan 123).</p>
-                <div class="flex flex-wrap gap-2 mt-2">
+            <div class="text-xs text-slate-700 leading-relaxed space-y-1.5 flex-grow">
+                <div class="flex items-center justify-between">
+                    <p class="font-bold text-sm text-slate-900">Format File Terdukung (.xlsx, .xls, .csv):</p>
+                    <span class="px-2 py-0.5 bg-indigo-100 text-indigo-800 rounded-full font-bold text-[10px]">
+                        <i class="fa-solid fa-sync mr-1"></i> Sinkronisasi Produk Otomatis
+                    </span>
+                </div>
+                <p>Sistem secara otomatis mendeteksi kolom: <span class="font-semibold text-blue-900">TANGGAL, NAMA BARANG, JUMLAH, TOTAL HARGA, SHIFT</span>.</p>
+                <p class="text-slate-600 bg-white/70 p-2 rounded-lg border border-blue-100">
+                    <i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> <strong>Pemberitahuan:</strong> Setiap data produk yang ada di file import akan otomatis disimpan ke database (<span class="font-semibold text-slate-800">Katalog Produk</span>) dengan ID produk unik, kategori, harga satuan, dan stok sehingga langsung dapat ditampilkan di katalog, kasir, dan analisis Apriori.
+                </p>
+                <div class="flex flex-wrap gap-2 pt-1">
                     <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-md font-bold text-[11px]"><i class="fa-solid fa-file-excel mr-1"></i> Excel (.xlsx)</span>
                     <span class="px-2.5 py-1 bg-green-100 text-green-800 rounded-md font-bold text-[11px]"><i class="fa-solid fa-file-csv mr-1"></i> CSV (.csv)</span>
                     <span class="px-2.5 py-1 bg-blue-100 text-blue-800 rounded-md font-bold text-[11px]"><i class="fa-solid fa-file-code mr-1"></i> Excel Legacy (.xls)</span>

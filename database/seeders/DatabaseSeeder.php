@@ -14,8 +14,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
-            ProdukSeeder::class,
-            TransaksiSeeder::class,
         ]);
 
         // Run initial Apriori calculation to populate association_rules table

@@ -26,7 +26,7 @@
                 <p class="text-xs text-slate-500 mt-0.5">Tentukan nilai Minimum Support dan Minimum Confidence dalam persentase (%)</p>
             </div>
             <button type="button" onclick="setBab3Defaults()" class="px-3 py-1.5 bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-bold rounded-lg border border-purple-200 transition-all flex items-center gap-1.5">
-                <i class="fa-solid fa-bookmark"></i> Parameter Skripsi Bab 3 (Support 40%, Conf 60%)
+                <i class="fa-solid fa-bookmark"></i> (Support 40%, Conf 70%)
             </button>
         </div>
 
@@ -45,14 +45,14 @@
                     <p class="text-xs text-slate-500 leading-relaxed">
                         Menentukan tingkat frekuensi kemunculan kombinasi produk dalam seluruh transaksi. Semakin tinggi nilainya, hanya kombinasi paling sering yang akan diproses.
                     </p>
-                    <input 
-                        type="number" 
-                        step="0.1" 
-                        min="0.1" 
-                        max="100" 
-                        name="min_support" 
-                        id="min_support" 
-                        value="{{ old('min_support', 40.0) }}" 
+                    <input
+                        type="number"
+                        step="0.1"
+                        min="0.1"
+                        max="100"
+                        name="min_support"
+                        id="min_support"
+                        value="{{ old('min_support', 40.0) }}"
                         oninput="document.getElementById('support_val_badge').innerText = this.value + '%'"
                         class="w-full px-4 py-2.5 bg-white rounded-xl border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-100 font-bold text-slate-800"
                         required>
@@ -67,19 +67,19 @@
                         <label for="min_confidence" class="text-sm font-bold text-slate-800 flex items-center gap-2">
                             <i class="fa-solid fa-shield-halved text-emerald-600"></i> Minimum Confidence (%)
                         </label>
-                        <span id="conf_val_badge" class="text-xs font-black px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-lg">60%</span>
+                        <span id="conf_val_badge" class="text-xs font-black px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-lg">70%</span>
                     </div>
                     <p class="text-xs text-slate-500 leading-relaxed">
                         Menentukan kepastian atau tingkat kekuatan hubungan asosiasi antara produk antecedent dan consequent (pemicu dan rekomendasi).
                     </p>
-                    <input 
-                        type="number" 
-                        step="0.1" 
-                        min="0.1" 
-                        max="100" 
-                        name="min_confidence" 
-                        id="min_confidence" 
-                        value="{{ old('min_confidence', 60.0) }}" 
+                    <input
+                        type="number"
+                        step="0.1"
+                        min="0.1"
+                        max="100"
+                        name="min_confidence"
+                        id="min_confidence"
+                        value="{{ old('min_confidence', 70.0) }}"
                         oninput="document.getElementById('conf_val_badge').innerText = this.value + '%'"
                         class="w-full px-4 py-2.5 bg-white rounded-xl border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-100 font-bold text-slate-800"
                         required>
@@ -164,9 +164,9 @@
 <script>
 function setBab3Defaults() {
     document.getElementById('min_support').value = 40;
-    document.getElementById('min_confidence').value = 60;
+    document.getElementById('min_confidence').value = 70;
     document.getElementById('support_val_badge').innerText = '40%';
-    document.getElementById('conf_val_badge').innerText = '60%';
+    document.getElementById('conf_val_badge').innerText = '70%';
 }
 </script>
 @endpush
