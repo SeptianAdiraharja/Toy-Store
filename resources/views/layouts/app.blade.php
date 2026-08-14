@@ -6,39 +6,19 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Serba 123 Toy Store') - Sistem Rekomendasi Apriori</title>
 
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                    },
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
                     colors: {
-                        brand: {
-                            50: '#f0f7ff',
-                            100: '#e0effe',
-                            500: '#2563eb',
-                            600: '#1d4ed8',
-                            700: '#1e40af',
-                            900: '#1e3a8a',
-                        },
-                        toy: {
-                            pink: '#f43f5e',
-                            amber: '#f59e0b',
-                            emerald: '#10b981',
-                            indigo: '#6366f1',
-                            purple: '#8b5cf6',
-                        }
+                        brand: { 50:'#f0f7ff',100:'#e0effe',500:'#2563eb',600:'#1d4ed8',700:'#1e40af',900:'#1e3a8a' },
+                        toy: { pink:'#f43f5e', amber:'#f59e0b', emerald:'#10b981', indigo:'#6366f1', purple:'#8b5cf6' }
                     }
                 }
             }
@@ -49,15 +29,13 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex">
 
-    <!-- Mobile Sidebar Backdrop Overlay -->
     <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 hidden md:hidden transition-opacity"></div>
 
-    <!-- Sidebar Container -->
     <aside id="sidebarNav" class="fixed inset-y-0 left-0 w-64 bg-slate-900 text-slate-300 flex flex-col z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out border-r border-slate-800 shadow-2xl">
 
         <!-- Brand Header -->
         <div class="h-16 flex items-center justify-between px-5 border-b border-slate-800/80 bg-slate-950/40">
-            <a href="{{ route('dashboard') }}" class="flex items-center gap-3 group">
+            <a href="{{ url('/') }}" class="flex items-center gap-3 group">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:scale-105 transition-transform">
                     <i class="fa-solid fa-shapes"></i>
                 </div>
@@ -71,70 +49,78 @@
             </button>
         </div>
 
-        <!-- Navigation Links Scrollable -->
+        <!-- Navigation Links (STRICT per role, sesuai struktur menu) -->
         <div class="flex-1 overflow-y-auto px-4 py-5 space-y-6 scrollbar-thin scrollbar-thumb-slate-800">
 
-            <!-- Group: Utama -->
+            {{-- ================= MENU OWNER ================= --}}
+            @if(auth()->user()->isOwner())
             <div>
-                <span class="px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Utama</span>
+                <span class="px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Menu Owner</span>
                 <nav class="space-y-1">
-                    @if(auth()->user()->isOwner() || auth()->user()->isAdmin())
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('dashboard') ? 'bg-gradient-to-r from-brand-600 to-indigo-600 text-white shadow-md shadow-brand-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
                         <i class="fa-solid fa-chart-pie text-base {{ request()->routeIs('dashboard') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
                         <span>Dashboard</span>
                     </a>
-                    @endif
 
-                    <a href="{{ route('kasir.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('kasir.*') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                        <i class="fa-solid fa-cart-shopping text-base {{ request()->routeIs('kasir.*') ? 'text-white' : 'text-emerald-400 group-hover:text-emerald-300' }}"></i>
-                        <span>Kasir (POS)</span>
+                    <a href="{{ route('laporan.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('laporan.*') ? 'bg-amber-600 text-white shadow-md shadow-amber-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                        <i class="fa-solid fa-file-invoice text-base {{ request()->routeIs('laporan.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
+                        <span>Laporan Penjualan</span>
+                    </a>
+
+                    <a href="{{ route('apriori.hasil_rekomendasi') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('apriori.hasil_rekomendasi') ? 'bg-purple-600 text-white shadow-md shadow-purple-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                        <i class="fa-solid fa-lightbulb text-base {{ request()->routeIs('apriori.hasil_rekomendasi') ? 'text-white' : 'text-amber-400 group-hover:text-amber-300' }}"></i>
+                        <span>Hasil Rekomendasi / Aturan Asosiasi</span>
                     </a>
                 </nav>
             </div>
+            @endif
 
-            <!-- Group: Kelola Data -->
+            {{-- ================= MENU ADMIN ================= --}}
+            @if(auth()->user()->isAdmin())
             <div>
-                <span class="px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Data Master</span>
+                <span class="px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Menu Admin</span>
                 <nav class="space-y-1">
                     <a href="{{ route('produks.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('produks.*') ? 'bg-brand-600 text-white shadow-md shadow-brand-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
                         <i class="fa-solid fa-boxes-stacked text-base {{ request()->routeIs('produks.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
                         <span>Data Produk</span>
                     </a>
 
-                    @if(auth()->user()->isOwner() || auth()->user()->isAdmin())
+                    <a href="{{ route('users.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('users.*') ? 'bg-brand-600 text-white shadow-md shadow-brand-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                        <i class="fa-solid fa-users text-base {{ request()->routeIs('users.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
+                        <span>Data User</span>
+                    </a>
+
                     <a href="{{ route('transaksis.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('transaksis.*') ? 'bg-brand-600 text-white shadow-md shadow-brand-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
                         <i class="fa-solid fa-receipt text-base {{ request()->routeIs('transaksis.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
                         <span>Data Transaksi</span>
                     </a>
-                    @endif
 
-                    @if(auth()->user()->isAdmin())
-                    <a href="{{ route('users.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('users.*') ? 'bg-brand-600 text-white shadow-md shadow-brand-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                        <i class="fa-solid fa-users text-base {{ request()->routeIs('users.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
-                        <span>Kelola User</span>
-                    </a>
-                    @endif
-                </nav>
-            </div>
-
-            <!-- Group: Analisis Apriori & Laporan -->
-            @if(auth()->user()->isOwner() || auth()->user()->isAdmin())
-            <div>
-                <span class="px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Analisis & Laporan</span>
-                <nav class="space-y-1">
                     <a href="{{ route('apriori.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('apriori.index') || request()->routeIs('apriori.process') ? 'bg-purple-600 text-white shadow-md shadow-purple-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
                         <i class="fa-solid fa-brain text-base {{ request()->routeIs('apriori.index') || request()->routeIs('apriori.process') ? 'text-white' : 'text-purple-400 group-hover:text-purple-300' }}"></i>
-                        <span>Proses Apriori</span>
+                        <span>Proses Algoritma Apriori</span>
                     </a>
 
                     <a href="{{ route('apriori.hasil_rekomendasi') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('apriori.hasil_rekomendasi') ? 'bg-purple-600 text-white shadow-md shadow-purple-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
                         <i class="fa-solid fa-lightbulb text-base {{ request()->routeIs('apriori.hasil_rekomendasi') ? 'text-white' : 'text-amber-400 group-hover:text-amber-300' }}"></i>
                         <span>Hasil Rekomendasi</span>
                     </a>
+                </nav>
+            </div>
+            @endif
 
-                    <a href="{{ route('laporan.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('laporan.*') ? 'bg-amber-600 text-white shadow-md shadow-amber-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                        <i class="fa-solid fa-file-invoice text-base {{ request()->routeIs('laporan.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
-                        <span>Laporan Penjualan</span>
+            {{-- ================= MENU KASIR ================= --}}
+            @if(auth()->user()->isKasir())
+            <div>
+                <span class="px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Menu Kasir</span>
+                <nav class="space-y-1">
+                    <a href="{{ route('kasir.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('kasir.index') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                        <i class="fa-solid fa-cart-shopping text-base {{ request()->routeIs('kasir.index') ? 'text-white' : 'text-emerald-400 group-hover:text-emerald-300' }}"></i>
+                        <span>Input Transaksi Penjualan</span>
+                    </a>
+
+                    <a href="{{ route('kasir.rekomendasi') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('kasir.rekomendasi') ? 'bg-purple-600 text-white shadow-md shadow-purple-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                        <i class="fa-solid fa-lightbulb text-base {{ request()->routeIs('kasir.rekomendasi') ? 'text-white' : 'text-amber-400 group-hover:text-amber-300' }}"></i>
+                        <span>Rekomendasi Produk (Real-time)</span>
                     </a>
                 </nav>
             </div>
@@ -142,7 +128,7 @@
 
         </div>
 
-        <!-- User Profile Card & Logout -->
+        <!-- User Profile Card & Logout (berlaku untuk semua role) -->
         <div class="p-4 border-t border-slate-800 bg-slate-950/60">
             <div class="flex items-center justify-between gap-3 p-2.5 rounded-xl bg-slate-900 border border-slate-800">
                 <div class="flex items-center gap-3 overflow-hidden">
@@ -170,11 +156,8 @@
     <!-- Main Content Layout Wrapper -->
     <div class="flex-1 flex flex-col min-w-0 md:pl-64 min-h-screen">
 
-        <!-- Top Navigation Header -->
         <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
             <div class="px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-
-                <!-- Left Mobile Toggle & Title -->
                 <div class="flex items-center gap-3">
                     <button type="button" onclick="toggleSidebar()" class="md:hidden p-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100 transition-colors">
                         <i class="fa-solid fa-bars text-xl"></i>
@@ -185,24 +168,24 @@
                     </div>
                 </div>
 
-                <!-- Right Quick User Info / Action -->
                 <div class="flex items-center gap-3">
                     <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 border border-slate-200 text-slate-700 rounded-full text-xs font-semibold">
                         <i class="fa-regular fa-clock text-slate-400"></i>
                         <span>{{ date('d M Y') }}</span>
                     </span>
+
+                    {{-- Tombol cepat Kasir POS hanya muncul untuk role Kasir --}}
+                    @if(auth()->user()->isKasir())
                     <a href="{{ route('kasir.index') }}" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-2">
                         <i class="fa-solid fa-cash-register"></i> Kasir POS
                     </a>
+                    @endif
                 </div>
-
             </div>
         </header>
 
-        <!-- Page Body Content -->
         <main class="flex-grow p-4 sm:p-6 lg:p-8">
 
-            <!-- Flash Messages -->
             @if (session('success'))
                 <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl flex items-center justify-between shadow-xs">
                     <div class="flex items-center gap-3">
@@ -230,7 +213,6 @@
             @yield('content')
         </main>
 
-        <!-- Footer -->
         <footer class="bg-white border-t border-slate-200 py-4 px-6 text-center sm:text-left text-xs text-slate-500 mt-auto flex flex-col sm:flex-row items-center justify-between gap-2">
             <p>&copy; {{ date('Y') }} <strong>Serba 123 Toy Store</strong> - Jatinangor</p>
             <p class="text-slate-400">Skripsi oleh Faisal Ahmad Mubaroq (22110145) - STMIK Mardira Indonesia</p>
@@ -238,7 +220,6 @@
 
     </div>
 
-    <!-- Toggle Script -->
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebarNav');
