@@ -11,9 +11,14 @@ use App\Http\Controllers\UserController;
 use App\Http\Middleware\EnsureUserRole;
 use Illuminate\Support\Facades\Route;
 
-// Redirect root to dashboard or login
+// Redirect root based on user role or login
 Route::get('/', function () {
-    return auth()->check() ? redirect()->route('dashboard') : redirect()->route('login');
+    if (!auth()->check()) {
+        return redirect()->route('login');
+    }
+    return auth()->user()->isKasir() 
+        ? redirect()->route('kasir.index') 
+        : redirect()->route('dashboard');
 });
 
 // Authentication Routes

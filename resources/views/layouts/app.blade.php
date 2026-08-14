@@ -57,7 +57,7 @@
 
         <!-- Brand Header -->
         <div class="h-16 flex items-center justify-between px-5 border-b border-slate-800/80 bg-slate-950/40">
-            <a href="{{ route('dashboard') }}" class="flex items-center gap-3 group">
+            <a href="{{ auth()->user()->isKasir() ? route('kasir.index') : route('dashboard') }}" class="flex items-center gap-3 group">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:scale-105 transition-transform">
                     <i class="fa-solid fa-shapes"></i>
                 </div>
@@ -71,73 +71,103 @@
             </button>
         </div>
 
-        <!-- Navigation Links Scrollable -->
+        <!-- Navigation Links Scrollable (Based on Role Flowchart) -->
         <div class="flex-1 overflow-y-auto px-4 py-5 space-y-6 scrollbar-thin scrollbar-thumb-slate-800">
 
-            <!-- Group: Utama -->
-            <div>
-                <span class="px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Utama</span>
-                <nav class="space-y-1">
-                    @if(auth()->user()->isOwner() || auth()->user()->isAdmin())
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('dashboard') ? 'bg-gradient-to-r from-brand-600 to-indigo-600 text-white shadow-md shadow-brand-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                        <i class="fa-solid fa-chart-pie text-base {{ request()->routeIs('dashboard') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
-                        <span>Dashboard</span>
-                    </a>
-                    @endif
+            @if(auth()->user()->isOwner())
+                <!-- Menu Owner -->
+                <div>
+                    <span class="px-3 text-[11px] font-bold text-amber-400 uppercase tracking-wider block mb-2">Menu Owner</span>
+                    <nav class="space-y-1">
+                        <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('dashboard') ? 'bg-amber-600 text-white shadow-md shadow-amber-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                            <i class="fa-solid fa-chart-pie text-base {{ request()->routeIs('dashboard') ? 'text-white' : 'text-amber-400 group-hover:text-white' }}"></i>
+                            <span>Dashboard</span>
+                        </a>
 
-                    <a href="{{ route('kasir.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('kasir.*') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                        <i class="fa-solid fa-cart-shopping text-base {{ request()->routeIs('kasir.*') ? 'text-white' : 'text-emerald-400 group-hover:text-emerald-300' }}"></i>
-                        <span>Kasir (POS)</span>
-                    </a>
-                </nav>
-            </div>
+                        <a href="{{ route('laporan.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('laporan.*') ? 'bg-amber-600 text-white shadow-md shadow-amber-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                            <i class="fa-solid fa-file-invoice-dollar text-base {{ request()->routeIs('laporan.*') ? 'text-white' : 'text-amber-400 group-hover:text-white' }}"></i>
+                            <span>Laporan Penjualan</span>
+                        </a>
 
-            <!-- Group: Kelola Data -->
-            <div>
-                <span class="px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Data Master</span>
-                <nav class="space-y-1">
-                    <a href="{{ route('produks.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('produks.*') ? 'bg-brand-600 text-white shadow-md shadow-brand-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                        <i class="fa-solid fa-boxes-stacked text-base {{ request()->routeIs('produks.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
-                        <span>Data Produk</span>
-                    </a>
+                        <a href="{{ route('apriori.hasil_rekomendasi') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('apriori.hasil_rekomendasi') ? 'bg-amber-600 text-white shadow-md shadow-amber-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                            <i class="fa-solid fa-lightbulb text-base {{ request()->routeIs('apriori.hasil_rekomendasi') ? 'text-white' : 'text-amber-400 group-hover:text-white' }}"></i>
+                            <span>Hasil Rekomendasi / Aturan Asosiasi</span>
+                        </a>
 
-                    @if(auth()->user()->isOwner() || auth()->user()->isAdmin())
-                    <a href="{{ route('transaksis.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('transaksis.*') ? 'bg-brand-600 text-white shadow-md shadow-brand-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                        <i class="fa-solid fa-receipt text-base {{ request()->routeIs('transaksis.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
-                        <span>Data Transaksi</span>
-                    </a>
-                    @endif
+                        <form method="POST" action="{{ route('logout') }}" class="pt-2">
+                            @csrf
+                            <button type="submit" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 cursor-pointer text-left">
+                                <i class="fa-solid fa-right-from-bracket text-base"></i>
+                                <span>Logout</span>
+                            </button>
+                        </form>
+                    </nav>
+                </div>
 
-                    @if(auth()->user()->isAdmin())
-                    <a href="{{ route('users.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('users.*') ? 'bg-brand-600 text-white shadow-md shadow-brand-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                        <i class="fa-solid fa-users text-base {{ request()->routeIs('users.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
-                        <span>Kelola User</span>
-                    </a>
-                    @endif
-                </nav>
-            </div>
+            @elseif(auth()->user()->isAdmin())
+                <!-- Menu Admin -->
+                <div>
+                    <span class="px-3 text-[11px] font-bold text-blue-400 uppercase tracking-wider block mb-2">Menu Admin</span>
+                    <nav class="space-y-1">
+                        <a href="{{ route('produks.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('produks.*') ? 'bg-brand-600 text-white shadow-md shadow-brand-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                            <i class="fa-solid fa-boxes-stacked text-base {{ request()->routeIs('produks.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
+                            <span>Data Produk</span>
+                        </a>
 
-            <!-- Group: Analisis Apriori & Laporan -->
-            @if(auth()->user()->isOwner() || auth()->user()->isAdmin())
-            <div>
-                <span class="px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Analisis & Laporan</span>
-                <nav class="space-y-1">
-                    <a href="{{ route('apriori.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('apriori.index') || request()->routeIs('apriori.process') ? 'bg-purple-600 text-white shadow-md shadow-purple-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                        <i class="fa-solid fa-brain text-base {{ request()->routeIs('apriori.index') || request()->routeIs('apriori.process') ? 'text-white' : 'text-purple-400 group-hover:text-purple-300' }}"></i>
-                        <span>Proses Apriori</span>
-                    </a>
+                        <a href="{{ route('users.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('users.*') ? 'bg-brand-600 text-white shadow-md shadow-brand-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                            <i class="fa-solid fa-users text-base {{ request()->routeIs('users.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
+                            <span>Data User</span>
+                        </a>
 
-                    <a href="{{ route('apriori.hasil_rekomendasi') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('apriori.hasil_rekomendasi') ? 'bg-purple-600 text-white shadow-md shadow-purple-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                        <i class="fa-solid fa-lightbulb text-base {{ request()->routeIs('apriori.hasil_rekomendasi') ? 'text-white' : 'text-amber-400 group-hover:text-amber-300' }}"></i>
-                        <span>Hasil Rekomendasi</span>
-                    </a>
+                        <a href="{{ route('transaksis.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('transaksis.*') ? 'bg-brand-600 text-white shadow-md shadow-brand-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                            <i class="fa-solid fa-receipt text-base {{ request()->routeIs('transaksis.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
+                            <span>Data Transaksi</span>
+                        </a>
 
-                    <a href="{{ route('laporan.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('laporan.*') ? 'bg-amber-600 text-white shadow-md shadow-amber-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                        <i class="fa-solid fa-file-invoice text-base {{ request()->routeIs('laporan.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
-                        <span>Laporan Penjualan</span>
-                    </a>
-                </nav>
-            </div>
+                        <a href="{{ route('apriori.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('apriori.index') || request()->routeIs('apriori.process') ? 'bg-brand-600 text-white shadow-md shadow-brand-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                            <i class="fa-solid fa-brain text-base {{ request()->routeIs('apriori.index') || request()->routeIs('apriori.process') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
+                            <span>Proses Algoritma Apriori</span>
+                        </a>
+
+                        <a href="{{ route('apriori.hasil_rekomendasi') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('apriori.hasil_rekomendasi') ? 'bg-brand-600 text-white shadow-md shadow-brand-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                            <i class="fa-solid fa-lightbulb text-base {{ request()->routeIs('apriori.hasil_rekomendasi') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
+                            <span>Hasil Rekomendasi</span>
+                        </a>
+
+                        <form method="POST" action="{{ route('logout') }}" class="pt-2">
+                            @csrf
+                            <button type="submit" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 cursor-pointer text-left">
+                                <i class="fa-solid fa-right-from-bracket text-base"></i>
+                                <span>Logout</span>
+                            </button>
+                        </form>
+                    </nav>
+                </div>
+
+            @elseif(auth()->user()->isKasir())
+                <!-- Menu Kasir -->
+                <div>
+                    <span class="px-3 text-[11px] font-bold text-emerald-400 uppercase tracking-wider block mb-2">Menu Kasir</span>
+                    <nav class="space-y-1">
+                        <a href="{{ route('kasir.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group {{ request()->routeIs('kasir.index') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-900/30' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                            <i class="fa-solid fa-cart-shopping text-base {{ request()->routeIs('kasir.index') ? 'text-white' : 'text-emerald-400 group-hover:text-emerald-300' }}"></i>
+                            <span>Input Transaksi Penjualan</span>
+                        </a>
+
+                        <a href="{{ route('kasir.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group text-slate-300 hover:bg-slate-800/70 hover:text-white">
+                            <i class="fa-solid fa-wand-magic-sparkles text-base text-purple-400 group-hover:text-purple-300"></i>
+                            <span>Rekomendasi Produk (Real-time)</span>
+                        </a>
+
+                        <form method="POST" action="{{ route('logout') }}" class="pt-2">
+                            @csrf
+                            <button type="submit" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 cursor-pointer text-left">
+                                <i class="fa-solid fa-right-from-bracket text-base"></i>
+                                <span>Logout</span>
+                            </button>
+                        </form>
+                    </nav>
+                </div>
             @endif
 
         </div>
