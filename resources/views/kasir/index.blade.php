@@ -383,37 +383,67 @@ function fetchRealtimeRecommendations() {
 
     const productNames = cart.map(item => item.name);
 
-    fetch("{{ route('kasir.recommendations') }}", {
+    fetch("{{ url('/kasir/recommendations') }}", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
+            "Accept": "application/json",
             "X-CSRF-TOKEN": "{{ csrf_token() }}"
         },
-        body: JSON.stringify({ product_names: productNames })
+        body: JSON.stringify({
+            product_names: productNames
+        })
     })
-    .then(res => res.json())
+    .then(async response => {
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || `HTTP Error ${response.status}`);
+        }
+
+        return data;
+    })
     .then(data => {
         if (data.recommendations && data.recommendations.length > 0) {
             let html = '';
+
             data.recommendations.forEach(rec => {
                 html += `
-                    <div class="p-2.5 bg-white/10 backdrop-blur-md rounded-xl border border-purple-400/30 flex items-center justify-between gap-2 hover:bg-white/20 transition-colors">
+                    <div class="p-2.5 bg-white/10 backdrop-blur-md rounded-xl border border-purple-400/30 flex items-center justify-between gap-2">
                         <div>
                             <div class="flex items-center gap-1.5">
-                                <span class="font-extrabold text-xs text-white">${rec.nama_produk}</span>
-                                <span class="px-1.5 py-0.2 bg-emerald-500/80 text-white text-[9px] font-bold rounded">Conf: ${rec.confidence}%</span>
+                                <span class="font-extrabold text-xs text-white">
+                                    ${rec.nama_produk}
+                                </span>
+
+                                <span class="px-1.5 py-0.2 bg-emerald-500/80 text-white text-[9px] font-bold rounded">
+                                    Conf: ${rec.confidence}%
+                                </span>
                             </div>
-                            <span class="text-[10px] text-purple-200 block">Karna memilih "${rec.antecedent}" &bull; Rp ${rec.harga.toLocaleString('id-ID')}</span>
+
+                            <span class="text-[10px] text-purple-200 block">
+                                Karena memilih "${rec.antecedent}" •
+                                Rp ${rec.harga.toLocaleString('id-ID')}
+                            </span>
                         </div>
-                        <button 
-                            type="button" 
-                            onclick="addToCart(${rec.id}, '${rec.nama_produk.replace(/'/g, "\\'")}', ${rec.harga}, ${rec.stok}, '${rec.id_produk}')"
-                            class="px-2.5 py-1 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold rounded-lg shadow-sm shrink-0 flex items-center gap-1">
-                            <i class="fa-solid fa-cart-plus text-[10px]"></i> Tambah
+
+                        <button
+                            type="button"
+                            onclick="addToCart(
+                                ${rec.id},
+                                '${rec.nama_produk.replace(/'/g, "\\'")}',
+                                ${rec.harga},
+                                ${rec.stok},
+                                '${rec.id_produk}'
+                            )"
+                            class="px-2.5 py-1 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold rounded-lg">
+                            <i class="fa-solid fa-cart-plus text-[10px]"></i>
+                            Tambah
                         </button>
                     </div>
                 `;
             });
+
             list.innerHTML = html;
             box.classList.remove('hidden');
         } else {
@@ -421,8 +451,10 @@ function fetchRealtimeRecommendations() {
             list.innerHTML = '';
         }
     })
-    .catch(err => {
-        console.error("Error fetching recommendations:", err);
+    .catch(error => {
+        console.error('Error fetching recommendations:', error);
+        box.classList.add('hidden');
+        list.innerHTML = '';
     });
 }
 

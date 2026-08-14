@@ -129,21 +129,6 @@
                     </button>
                 </form>
 
-                <!-- Quick Demo Login -->
-                <div class="mt-8 pt-6 border-t border-slate-700/60">
-                    <span class="block text-xs font-semibold text-slate-400 text-center mb-3">AKUN DEMO CEPAT</span>
-                    <div class="grid grid-cols-3 gap-2">
-                        <button type="button" onclick="quickLogin('owner', 'password')" class="px-2 py-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 rounded-lg text-xs font-semibold flex flex-col items-center transition-colors cursor-pointer">
-                            <i class="fa-solid fa-crown mb-1"></i> Owner
-                        </button>
-                        <button type="button" onclick="quickLogin('admin', 'password')" class="px-2 py-2 bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-300 rounded-lg text-xs font-semibold flex flex-col items-center transition-colors cursor-pointer">
-                            <i class="fa-solid fa-user-gear mb-1"></i> Admin
-                        </button>
-                        <button type="button" onclick="quickLogin('kasir', 'password')" class="px-2 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 rounded-lg text-xs font-semibold flex flex-col items-center transition-colors cursor-pointer">
-                            <i class="fa-solid fa-cash-register mb-1"></i> Kasir
-                        </button>
-                    </div>
-                </div>
             </div>
 
             <p class="text-center text-xs text-slate-500 mt-6">
