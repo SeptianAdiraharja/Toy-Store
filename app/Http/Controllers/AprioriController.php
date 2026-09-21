@@ -19,7 +19,7 @@ class AprioriController extends Controller
     {
         $rules = AssociationRule::orderBy('nilai_confidence', 'desc')
             ->orderBy('nilai_support', 'desc')
-            ->get();
+            ->paginate(10);
 
         return view('apriori.index', compact('rules'));
     }
@@ -51,7 +51,7 @@ class AprioriController extends Controller
 
         $rules = $query->orderBy('nilai_confidence', 'desc')
             ->orderBy('nilai_support', 'desc')
-            ->paginate(15)
+            ->paginate(5)
             ->withQueryString();
 
         return view('apriori.hasil_rekomendasi', compact('rules'));

@@ -374,7 +374,6 @@ class TransaksiController extends Controller
     private function saveGroupedTransactions(array $groupedTransactions): int
     {
         $importedCount = 0;
-        $counter = 1;
 
         foreach ($groupedTransactions as $groupKey => $data) {
             if (empty($data['items'])) continue;
@@ -387,7 +386,18 @@ class TransaksiController extends Controller
                     'sore' => 'SRE',
                     default => 'PGI'
                 };
-                $trxId = 'TRX-' . $data['date']->format('Ymd') . '-' . $shiftCode . '-' . str_pad($counter++, 2, '0', STR_PAD_LEFT);
+                
+                // Perbaikan: Gunakan kombinasi timestamp/random atau cek database agar tidak bentrok
+                do {
+                    $randomSuffix = strtoupper(substr(uniqid(), -4));
+                    $trxId = 'TRX-' . $data['date']->format('Ymd') . '-' . $shiftCode . '-' . $randomSuffix;
+                } while (Transaksi::where('id_transaksi', $trxId)->exists());
+            }
+
+            // Cek juga jika id_transaksi dari file sudah ada di database (untuk mencegah duplikat saat re-import)
+            if (!empty($data['trx_id']) && Transaksi::where('id_transaksi', $trxId)->exists()) {
+                // Opsional: Lewati atau update, di sini kita skip agar tidak error
+                continue;
             }
 
             $totalHarga = 0;

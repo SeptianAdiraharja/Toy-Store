@@ -151,6 +151,9 @@
                     </tbody>
                 </table>
             </div>
+            <div class="mt-4 pt-4 border-t border-slate-100">
+                {{ $rules->links() }}
+            </div>
         @else
             <div class="text-center py-8 text-slate-400 text-sm">
                 <i class="fa-solid fa-box-open text-3xl mb-2 block text-slate-300"></i>
