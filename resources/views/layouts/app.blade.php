@@ -10,23 +10,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
-                    colors: {
-                        brand: { 50:'#f0f7ff',100:'#e0effe',500:'#2563eb',600:'#1d4ed8',700:'#1e40af',900:'#1e3a8a' },
-                        toy: { pink:'#f43f5e', amber:'#f59e0b', emerald:'#10b981', indigo:'#6366f1', purple:'#8b5cf6' }
-                    }
-                }
-            }
-        }
-    </script>
+    
+    <!-- Panggilan Utama Aset Lokal Vite Offline -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
+
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex">
 
     <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 hidden md:hidden transition-opacity"></div>
